@@ -23,13 +23,19 @@ class JawabanController extends Controller
     public function show($pertanyaan_id)
     {
         // mengambil data pegawai berdasarkan id yang dipilih
-        $jawabans = DB::table('jawabans')->where('pertanyaan_id', $pertanyaan_id)->get();
+        $jawabans = DB::table('jawabans')
+            ->select('jawabans.id as id', 'jawabans.isi as isi_jawaban', 'pertanyaans.id as pertanyaan_id', 'pertanyaans.isi as isi_pertanyaan')
+            ->rightJoin('pertanyaans', 'jawabans.pertanyaan_id', '=', 'pertanyaans.id')
+            ->where('jawabans.pertanyaan_id', $pertanyaan_id)->get();
         // passing data pegawai yang didapat ke view edit.blade.php
-        $users_count = DB::table('jawabans')
+        $jwbn_count = DB::table('jawabans')
             ->where('pertanyaan_id', '=', $pertanyaan_id)
             ->count();
-        if ($users_count > 0) {
-            return view('jawaban.detail', ['jawabans' => $jawabans]);
+        if ($jwbn_count > 0) {
+            $pertanyaanya = DB::table('pertanyaans')->distinct()
+                ->where('id', '=', $pertanyaan_id)
+                ->get();
+            return view('jawaban.detail', ['jawabans' => $jawabans, 'pertanyaannya' => $pertanyaanya]);
         } else {
 
             return view('jawaban.detail', ['jawabans' => $pertanyaan_id]);
@@ -45,7 +51,8 @@ class JawabanController extends Controller
         unset($data["_token"]);
         $jawaban = Jawaban::save($data);
         if ($jawaban) {
-            return redirect('/pertanyaan');
+            // return redirect()->route('jawaban/', ['id' => 1]);
+            return redirect()->to('jawaban/' . $pertanyaan_id);
         }
     }
 

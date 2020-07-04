@@ -1,7 +1,7 @@
 @extends('adminlte.master')
 
 @section('content')
-
+<br>
 @if (strlen($jawabans) <= 10) <h4>Jawaban kosong, tambahkan jawaban anda</h4>
     <div class="card-body">
         <form action="/jawaban/{{ $jawabans }}" method="POST">
@@ -15,16 +15,27 @@
     </div>
 
     @else
+    <div class="card text-center">
+        @foreach ($pertanyaannya as $data1)
+        <div class="card-header">
+            {{ $data1->judul }}
+        </div>
+        <div class="card-body">
+            <p class="card-text">{{ $data1->isi }}</p>
+
+            @endforeach
+        </div>
+    </div>
+
     <div class="card">
         <div class="card-body">
-            <a href="/pertanyaan">kembali</a>
 
             <table class="table">
                 <thead>
                     <tr>
                         <th scope="col"> ID </th>
-                        <th scope="col">Isi</th>
-                        <th scope="col">Id Pertanyaan</th>
+                        <th scope="col">jawaban</th>
+                        <th scope="col">aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -33,8 +44,7 @@
 
                     <tr>
                         <th scope="row">{{ $data->id }}</th>
-                        <td>{{ $data->isi }}</td>
-                        <td>{{ $data->pertanyaan_id }}</td>
+                        <td>{{ $data->isi_jawaban }}</td>
                     </tr>
                     @endforeach
                 </tbody>

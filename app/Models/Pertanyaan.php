@@ -13,6 +13,30 @@ class Pertanyaan
         $pertanyaans = DB::table('pertanyaans')->get();
         return $pertanyaans;
     }
+    public static function find_by_id($id)
+    {
+        $pertanyaans = DB::table('pertanyaans')->where('id', '=', $id)->first();
+        return $pertanyaans;
+    }
+
+    public static function update($id, $request)
+    {
+        $pertanyaans = DB::table('pertanyaans')
+            ->where('id', '=', $id)
+            ->update([
+                'judul' => $request["judul"],
+                'isi' => $request["isi"]
+            ]);
+        return $pertanyaans;
+    }
+
+    public static function destroy($id)
+    {
+        $deleted = DB::table('pertanyaans')
+            ->where('id', '=', $id)
+            ->delete();
+        return $deleted;
+    }
 
     public static function save($data)
     {
